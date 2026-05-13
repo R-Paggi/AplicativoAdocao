@@ -2,13 +2,13 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function DetalhesScreen() {
@@ -29,10 +29,11 @@ export default function DetalhesScreen() {
               <Ionicons name="arrow-back" size={24} color="#1A3626" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconBtn}>
-              <Ionicons name="heart-outline" size={24} color="#1A3626" />
+              <Ionicons name="heart" size={24} color="#FF4B4B" />
             </TouchableOpacity>
           </SafeAreaView>
         </View>
+     
 
         {/* Informações Principais */}
         <View style={styles.content}>
@@ -40,7 +41,8 @@ export default function DetalhesScreen() {
             <Text style={styles.petName}>Dionísio</Text>
             <Ionicons name="male" size={24} color="#3498db" />
           </View>
-          
+                    
+
           <View style={styles.locationRow}>
             <Ionicons name="location" size={16} color="#2E8B57" />
             <Text style={styles.locationText}>Refúgio do Coração • A 2,5km de você</Text>
