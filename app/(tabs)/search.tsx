@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { getUsuarioAtual } from '@/services/auth';
+import { supabase } from '@/lib/supabase';
 import type { PorteAnimal, SexoAnimal } from '@/types/database';
 import BottomMenu from './components/BottomMenu';
 
@@ -14,6 +16,22 @@ export default function SearchScreen() {
   const [porte, setPorte] = useState<PorteAnimal | null>((params.porte as PorteAnimal) || null);
   const [sexo, setSexo] = useState<SexoAnimal | null>((params.sexo as SexoAnimal) || null);
   const [idade, setIdade] = useState<Idade>((params.idade as Idade) || null);
+  const [nomeUsuario, setNomeUsuario] = useState('user');
+  const [fotoPerfil, setFotoPerfil] = useState<string | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      carregarPerfil();
+    }, [])
+  );
+
+  async function carregarPerfil() {
+    const usuario = await getUsuarioAtual();
+    if (!usuario) return;
+    const { data } = await supabase.from('profiles').select('nome, foto_url').eq('id', usuario.id).single();
+    setNomeUsuario(data?.nome ?? 'user');
+    setFotoPerfil(data?.foto_url ?? null);
+  }
 
   function aplicarFiltros() {
     const query: Record<string, string> = {};
@@ -41,7 +59,9 @@ export default function SearchScreen() {
           <Text style={styles.headerTitle}>Seu Novo Amigo</Text>
           <TouchableOpacity onPress={() => router.push('/profile')}>
             <Image
-              source={{ uri: 'https://api.dicebear.com/7.x/initials/png?seed=user' }}
+              source={{
+                uri: fotoPerfil ?? 'https://api.dicebear.com/7.x/initials/png?seed=' + nomeUsuario,
+              }}
               style={styles.profilePic}
             />
           </TouchableOpacity>

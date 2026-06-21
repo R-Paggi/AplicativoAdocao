@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { cadastrar } from '@/services/auth';
 import type { PerfilRole } from '@/types/database';
+import SeletorUf from '@/components/SeletorUf';
 
 export default function CadastroScreen() {
   const router = useRouter();
@@ -32,7 +33,6 @@ export default function CadastroScreen() {
 
   const emailRef = useRef<TextInput>(null);
   const cidadeRef = useRef<TextInput>(null);
-  const estadoRef = useRef<TextInput>(null);
   const senhaRef = useRef<TextInput>(null);
   const confirmarSenhaRef = useRef<TextInput>(null);
 
@@ -75,8 +75,8 @@ export default function CadastroScreen() {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -161,26 +161,14 @@ export default function CadastroScreen() {
                   onChangeText={setCidade}
                   editable={!carregando}
                   returnKeyType="next"
-                  onSubmitEditing={() => estadoRef.current?.focus()}
+                  onSubmitEditing={() => senhaRef.current?.focus()}
                 />
               </View>
             </View>
             <View style={styles.smallInputWrapper}>
               <Text style={styles.label}>UF</Text>
               <View style={styles.inputContainer}>
-                <TextInput
-                  ref={estadoRef}
-                  style={styles.input}
-                  placeholder="PR"
-                  placeholderTextColor="#A0A0A0"
-                  value={estado}
-                  onChangeText={setEstado}
-                  autoCapitalize="characters"
-                  maxLength={2}
-                  editable={!carregando}
-                  returnKeyType="next"
-                  onSubmitEditing={() => senhaRef.current?.focus()}
-                />
+                <SeletorUf value={estado} onChange={setEstado} disabled={carregando} />
               </View>
             </View>
           </View>

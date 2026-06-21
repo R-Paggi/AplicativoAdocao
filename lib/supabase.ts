@@ -1,6 +1,7 @@
 import 'react-native-url-polyfill/auto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
+import { Platform } from 'react-native';
 import type { Database } from '@/types/database';
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
@@ -12,9 +13,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
+const ExpoWebStorage = {
+  getItem: (key: string) => {
+    if (typeof localStorage === 'undefined') return Promise.resolve(null);
+    return Promise.resolve(localStorage.getItem(key));
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof localStorage === 'undefined') return Promise.resolve();
+    localStorage.setItem(key, value);
+    return Promise.resolve();
+  },
+  removeItem: (key: string) => {
+    if (typeof localStorage === 'undefined') return Promise.resolve();
+    localStorage.removeItem(key);
+    return Promise.resolve();
+  },
+};
+
+const storage = Platform.OS === 'web' ? ExpoWebStorage : AsyncStorage;
+
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage,
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

@@ -98,6 +98,7 @@ export default function FeedScreen() {
   const [carregando, setCarregando] = useState(true);
   const [atualizando, setAtualizando] = useState(false);
   const [fotoPerfil, setFotoPerfil] = useState<string | null>(null);
+  const [nomeUsuario, setNomeUsuario] = useState<string>('user');
   const [tipoUsuario, setTipoUsuario] = useState<'usuario' | 'ong' | null>(null);
   const [favoritosIds, setFavoritosIds] = useState<Set<string>>(new Set());
   const [naoLidas, setNaoLidas] = useState(0);
@@ -161,8 +162,9 @@ export default function FeedScreen() {
   async function carregarPerfil() {
     const usuario = await getUsuarioAtual();
     if (!usuario) return;
-    const { data } = await supabase.from('profiles').select('foto_url, tipo').eq('id', usuario.id).single();
+    const { data } = await supabase.from('profiles').select('nome, foto_url, tipo').eq('id', usuario.id).single();
     setFotoPerfil(data?.foto_url ?? null);
+    setNomeUsuario(data?.nome ?? 'user');
     setTipoUsuario(data?.tipo ?? null);
   }
 
@@ -217,7 +219,7 @@ export default function FeedScreen() {
           <TouchableOpacity onPress={() => router.push('/profile')}>
             <Image
               source={{
-                uri: fotoPerfil ?? 'https://api.dicebear.com/7.x/initials/png?seed=user',
+                uri: fotoPerfil ?? 'https://api.dicebear.com/7.x/initials/png?seed=' + nomeUsuario,
               }}
               style={styles.profilePic}
             />

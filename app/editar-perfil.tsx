@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { supabase } from '@/lib/supabase';
 import { atualizarPerfil, getUsuarioAtual } from '@/services/auth';
+import SeletorUf from '@/components/SeletorUf';
 
 export default function EditarPerfilScreen() {
   const router = useRouter();
@@ -32,7 +33,6 @@ export default function EditarPerfilScreen() {
 
   const telefoneRef = useRef<TextInput>(null);
   const cidadeRef = useRef<TextInput>(null);
-  const estadoRef = useRef<TextInput>(null);
   const fotoUrlRef = useRef<TextInput>(null);
   const bioRef = useRef<TextInput>(null);
 
@@ -110,8 +110,8 @@ export default function EditarPerfilScreen() {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
       >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -172,26 +172,14 @@ export default function EditarPerfilScreen() {
                   onChangeText={setCidade}
                   editable={!salvando}
                   returnKeyType="next"
-                  onSubmitEditing={() => estadoRef.current?.focus()}
+                  onSubmitEditing={() => fotoUrlRef.current?.focus()}
                 />
               </View>
             </View>
             <View style={styles.smallInputWrapper}>
               <Text style={styles.label}>UF</Text>
               <View style={styles.inputContainer}>
-                <TextInput
-                  ref={estadoRef}
-                  style={styles.input}
-                  placeholder="PR"
-                  placeholderTextColor="#A0A0A0"
-                  value={estado}
-                  onChangeText={setEstado}
-                  autoCapitalize="characters"
-                  maxLength={2}
-                  editable={!salvando}
-                  returnKeyType="next"
-                  onSubmitEditing={() => fotoUrlRef.current?.focus()}
-                />
+                <SeletorUf value={estado} onChange={setEstado} disabled={salvando} />
               </View>
             </View>
           </View>
